@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday 💖</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display&family=Poppins&display=swap" rel="stylesheet">
+<style>
+  body {
+    margin:0; padding:0; font-family:'Poppins', sans-serif;
+    background: linear-gradient(135deg, #ffe6f0, #fff0e6);
+    overflow-x:hidden;
+    text-align:center;
+  }
+  .container { padding: 50px 20px; }
+  h1, h2 { margin:20px 0; font-family:'Playfair Display', serif; }
+  #countdown { font-size: 2rem; margin-top:20px; }
+  .hidden { opacity:0; }
+  .show { opacity:1; transition:1s; }
+  .button { padding:15px 30px; margin:10px; background:#ff6699; color:white; border:none; border-radius:8px; cursor:pointer; font-size:1rem; }
+  .wishes, .gift, .photos { margin-top:40px; }
+  .photo-grid { display:flex; flex-wrap:wrap; justify-content:center; gap:10px; }
+  .photo-grid img { width:150px; height:150px; object-fit:cover; border-radius:10px; }
+  /* Confetti effect */
+  .confetti { position: fixed; width:10px; height:10px; background: #ff66aa; top:0; animation: fall 3s linear infinite; }
+  @keyframes fall {
+    0% { transform: translateY(-10px) rotate(0deg); }
+    100% { transform: translateY(100vh) rotate(360deg); }
+  }
+</style>
+</head>
+<body>
+
+<div class="container" id="page1">
+  <h1>Let's count down to our little baby’s birthday 🎂💖</h1>
+  <p>You’ve been special to me since the very first day 🤍</p>
+  <div id="countdown"></div>
+</div>
+
+<div class="container hidden" id="page2">
+  <h1>Happy Birthday! 🥳💛</h1>
+  <div class="wishes">
+    <h2 id="wish1" class="hidden">Wishing you all the happiness in the world 💛</h2>
+    <h2 id="wish2" class="hidden">May your day be full of smiles and love 🤍</h2>
+    <h2 id="wish3" class="hidden">You deserve all the joy today and always 🎂</h2>
+  </div>
+  <button class="button" id="showGift">See your gift 🎁</button>
+</div>
+
+<div class="container hidden" id="page3">
+  <h1>Time to Celebrate! 🎉</h1>
+  <div id="confettiContainer"></div>
+  <img src="https://i.imgur.com/4bZQbHD.png" alt="Cake" style="width:200px; margin-top:20px;">
+  <div class="gift hidden" id="gift">
+    <h2>A little something from my heart 💌</h2>
+    <p>My love, every moment with you is magical… You’re my home, my happiness, my everything. Happy Birthday! 🥹❤️</p>
+  </div>
+  <div class="photos hidden" id="photos">
+    <h2>Our Memories 📸</h2>
+    <div class="photo-grid">
+      <img src="https://i.imgur.com/PHOTO1.jpg" alt="Photo1">
+      <img src="https://i.imgur.com/PHOTO2.jpg" alt="Photo2">
+      <img src="https://i.imgur.com/PHOTO3.jpg" alt="Photo3">
+      <img src="https://i.imgur.com/PHOTO4.jpg" alt="Photo4">
+    </div>
+  </div>
+</div>
+
+<script>
+// COUNTDOWN
+const birthday = new Date("Dec 30, 2025 00:00:00").getTime();
+const countdownEl = document.getElementById("countdown");
+const page1 = document.getElementById("page1");
+const page2 = document.getElementById("page2");
+const page3 = document.getElementById("page3");
+const wishes = ["wish1","wish2","wish3"];
+
+let countdownInterval = setInterval(() => {
+  const now = new Date().getTime();
+  const distance = birthday - now;
+  if(distance <=0) {
+    clearInterval(countdownInterval);
+    countdownEl.innerHTML = "🎉 Time to Celebrate! 🎉";
+    // Move to Page2 after 1 sec
+    setTimeout(() => {
+      page1.classList.add("hidden");
+      page2.classList.remove("hidden");
+      showWishes();
+    },1000);
+  } else {
+    const days = Math.floor(distance/(1000*60*60*24));
+    const hours = Math.floor((distance%(1000*60*60*24))/(1000*60*60));
+    const minutes = Math.floor((distance%(1000*60*60))/(1000*60));
+    const seconds = Math.floor((distance%(1000*60))/1000);
+    countdownEl.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+  }
+},1000);
+
+// SHOW WISHES SEQUENTIALLY
+function showWishes(){
+  wishes.forEach((id,i)=>{
+    setTimeout(()=>{
+      document.getElementById(id).classList.add("show");
+    }, i*1500);
+  });
+}
+
+// SHOW GIFT AND PHOTOS
+const showGiftBtn = document.getElementById("showGift");
+showGiftBtn.addEventListener("click", ()=>{
+  page2.classList.add("hidden");
+  page3.classList.remove("hidden");
+  // Show gift
+  setTimeout(()=>{ document.getElementById("gift").classList.add("show"); }, 1000);
+  // Show photos
+  setTimeout(()=>{ document.getElementById("photos").classList.add("show"); }, 2500);
+  // Add confetti
+  for(let i=0;i<50;i++){
+    let c = document.createElement("div");
+    c.classList.add("confetti");
+    c.style.left = Math.random()*100+"vw";
+    c.style.background = `hsl(${Math.random()*360},100%,70%)`;
+    document.getElementById("confettiContainer").appendChild(c);
+  }
+});
+</script>
+
+</body>
+</html>
